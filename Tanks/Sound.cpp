@@ -4,7 +4,7 @@
 
 Sound::Sound()
 {
-	sound = NULL;
+	sound = nullptr;
 }
 
 Sound::~Sound()
@@ -20,10 +20,10 @@ void Sound::loadWAV(std::string path)
 
 void Sound::clean()
 {
-	if (sound != NULL)
+	if (sound != nullptr)
 	{
 		Mix_FreeChunk(sound);
-		sound = NULL;
+		sound = nullptr;
 	}
 }
 

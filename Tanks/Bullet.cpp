@@ -8,9 +8,11 @@ enum direction
 	LEFT = 270
 };
 
-const int Bullet::width = 6;
-const int Bullet::height = 12;
 const int Bullet::velocity = 10;
+
+Texture Bullet::texture{};
+Sound Bullet::fireSound{};
+Sound* Bullet::collisionSound = nullptr;
 
 
 Bullet::Bullet(int fireButton)
@@ -18,12 +20,14 @@ Bullet::Bullet(int fireButton)
 	this->fireButton = fireButton;
 	reset();
 
+	width = 6;
+	height = 12;
+
 	fireButtonPressed = false;
 
 	shotTicks = 0;
 	buttonTicks = 0;
 }
-
 
 Bullet::~Bullet()
 {
@@ -48,7 +52,7 @@ void Bullet::reset()
 	exist = false;
 }
 
-void Bullet::fire(Tank &tank, Sound &fireSound, int delay)
+void Bullet::fire(Tank *tank, int delay)
 {
 	if (fireButtonPressed)
 	{
@@ -61,33 +65,33 @@ void Bullet::fire(Tank &tank, Sound &fireSound, int delay)
 			//Update fire ticks
 			shotTicks = buttonTicks;
 			
-			dir = tank.dir;
+			dir = tank->dir;
 
 			//Set x,y based on tank coordinates and direction
 			switch (dir)
 			{
 				case UP:
 				{
-					x = tank.x + tank.width / 2 - width / 2;
-					y = tank.y - height;
+					x = tank->x + tank->width / 2 - width / 2;
+					y = tank->y - height;
 					break;
 				}
 				case DOWN:
 				{
-					x = tank.x + tank.width / 2 - width / 2;
-					y = tank.y + tank.height;
+					x = tank->x + tank->width / 2 - width / 2;
+					y = tank->y + tank->height;
 					break;
 				}
 				case LEFT:
 				{
-					x = tank.x - height;
-					y = tank.y + tank.height / 2 - width / 2;
+					x = tank->x - height;
+					y = tank->y + tank->height / 2 - width / 2;
 					break;
 				}
 				case RIGHT:
 				{
-					x = tank.x + tank.width;
-					y = tank.y + tank.height / 2 - width / 2;
+					x = tank->x + tank->width;
+					y = tank->y + tank->height / 2 - width / 2;
 				}
 			}
 
@@ -137,7 +141,7 @@ void Bullet::fire(Tank &tank, Sound &fireSound, int delay)
 	}
 }
 
-void Bullet::move(Sound &collisionSound)
+void Bullet::move()
 {
 	x += vx;
 	collider.x = x;
@@ -145,7 +149,7 @@ void Bullet::move(Sound &collisionSound)
 	if ((x < 0) || (x + width > 768))
 	{
 		reset();
-		collisionSound.play();
+		collisionSound->play();
 	}
 
 	y += vy;
@@ -154,28 +158,8 @@ void Bullet::move(Sound &collisionSound)
 	if ((y < 0) || (y + height > 768))
 	{
 		reset();
-		collisionSound.play();
+		collisionSound->play();
 	}
-}
-
-int Bullet::getX()
-{
-	return x;
-}
-
-int Bullet::getY()
-{
-	return y;
-}
-
-int Bullet::getWidth()
-{
-	return width;
-}
-
-int Bullet::getHeight()
-{
-	return height;
 }
 
 bool Bullet::doesExist()
@@ -191,4 +175,16 @@ direction Bullet::getDirection()
 SDL_Rect Bullet::getCollider()
 {
 	return collider;
+}
+
+void Bullet::init(std::string texturePath, std::string fireSoundPath, Sound* collisionSoundPtr)
+{
+	texture.loadPNG(texturePath);
+	fireSound.loadWAV(fireSoundPath);
+	collisionSound = collisionSoundPtr;
+}
+
+void Bullet::render()
+{
+	if(exist) texture.render(x, y, static_cast<double>(dir));
 }

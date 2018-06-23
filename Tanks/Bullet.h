@@ -4,30 +4,28 @@
 enum direction;
 class Sound;
 class Tank;
+class Texture;
 
-class Bullet
+class Bullet : public Object
 {
 public:
 	Bullet(int fireButton);
 	~Bullet();
 
+	static void init(std::string texturePath, std::string fireSoundPath, Sound *collisionSound);
+
+	//Render bullet if exist
+	virtual void render();
 	void handleEvent(SDL_Event &e);
 	void reset();
-	void fire(Tank &tank, Sound &fireSound, int delay);
-	void move(Sound &collisionSound);
+	void fire(Tank *tank, int delay);
+	void move();
 
-	int getX();
-	int getY();
-	int getWidth();
-	int getHeight();
 	bool doesExist();
 	direction getDirection();
 	SDL_Rect getCollider();
 
 private:
-	int x;
-	int y;
-
 	int vx;
 	int vy;
 
@@ -41,10 +39,10 @@ private:
 	SDL_Rect collider;
 
 	int fireButton;
-
-	static const int width;
-	static const int height;
-	static const int velocity;
-
 	bool fireButtonPressed;
+
+	static const int velocity;
+	static Texture texture;
+	static Sound fireSound;
+	static Sound *collisionSound;
 };

@@ -1,15 +1,17 @@
 #pragma once
 #include "Game.h"
 
-class HpBar
+class HpBar : public Object
 {
 public:
 	HpBar(int maxHp, int width, int height, int x, int y);
 	~HpBar();
 
-	void render(SDL_Renderer *renderer, int hp);
+	virtual void render();
+	void setHp(int hp);
 
 private:
-	SDL_Rect *bar;
+	int hp;
 	int maxHp;
+	SDL_Rect *bar;
 };

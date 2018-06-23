@@ -1,10 +1,13 @@
 #include "Wall.h"
 
-const int Wall::width = 64;
-const int Wall::height = 64;
+Texture Wall::wallTexture{};
+Texture Wall::solidWallTexture{};
 
 Wall::Wall(int x, int y, bool destructable)
 {
+	width = 64;
+	height = 64;
+
 	this->x = x;
 	this->y = y;
 	this->destructable = destructable;
@@ -20,6 +23,18 @@ Wall::Wall(int x, int y, bool destructable)
 
 Wall::~Wall()
 {
+}
+
+void Wall::initTextures(std::string wallTexturePath, std::string solidWallTexturePath)
+{
+	wallTexture.loadPNG(wallTexturePath);
+	solidWallTexture.loadPNG(solidWallTexturePath);
+}
+
+void Wall::render()
+{
+	if (destructable && exist) wallTexture.render(x, y);
+	else if (exist) solidWallTexture.render(x, y);
 }
 
 int Wall::getX()

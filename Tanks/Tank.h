@@ -2,13 +2,17 @@
 #include "Game.h"
 
 enum direction;
+class Texture;
 
-class Tank
+class Tank : public Object
 {
 public:
 	Tank(int x, int y, direction d, int up, int down, int left, int right);
 	~Tank();
 
+	static void initTexture(std::string path);
+
+	virtual void render();
 	void handleEvent(SDL_Event &e);
 	void move();
 	void undo();
@@ -31,10 +35,6 @@ public:
 	friend class Bullet;
 
 private:
-	//Coordinates of the tank
-	int x;
-	int y;
-
 	//Velocity of the tank
 	int vx;
 	int vy;
@@ -65,7 +65,7 @@ private:
 	Uint32 rightTicks;
 
 	static const int velocity;
-	static const int width;
-	static const int height;
 	static const int maxHp;
+
+	static Texture texture;
 };

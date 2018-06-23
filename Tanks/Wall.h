@@ -1,12 +1,15 @@
 #pragma once
 #include "Game.h"
 
-class Wall
+class Wall : public Object
 {
 public:
 	Wall(int x, int y, bool destructable = true);
 	~Wall();
 
+	static void initTextures(std::string wallTexturePath, std::string solidWallTexturePath);
+
+	virtual void render();
 	void destroy();
 
 	int getX();
@@ -16,12 +19,10 @@ public:
 	SDL_Rect getCollider();
 
 private:
-	int x;
-	int y;
 	bool exist;
 	bool destructable;
 	SDL_Rect collider;
 
-	static const int width;
-	static const int height;
+	static Texture wallTexture;
+	static Texture solidWallTexture;
 };

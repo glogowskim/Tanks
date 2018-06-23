@@ -1,9 +1,9 @@
 #include "HpBar.h"
 
-
 HpBar::HpBar(int maxHp, int width, int height, int x, int y)
 {
 	this->maxHp = maxHp;
+	this->hp = maxHp;
 
 	bar = new SDL_Rect[maxHp];
 
@@ -22,7 +22,12 @@ HpBar::~HpBar()
 	delete[] bar;
 }
 
-void HpBar::render(SDL_Renderer *renderer, int hp)
+void HpBar::setHp(int hp)
+{
+	this->hp = hp;
+}
+
+void HpBar::render()
 {
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	for (int i = 0; i < hp; i++) SDL_RenderFillRect(renderer, &bar[i]);

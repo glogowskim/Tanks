@@ -9,13 +9,16 @@ enum direction
 };
 
 const int Tank::velocity = 2;
-const int Tank::width = 60;
-const int Tank::height = 60;
 const int Tank::maxHp = 4;
+
+Texture Tank::texture;
 
 Tank::Tank(int x, int y, direction d, int up, int down, int left, int right)
 {
 	respawn(x, y);
+
+	width = 60;
+	height = 60;
 
 	vx = 0;
 	vy = 0;
@@ -218,4 +221,14 @@ void Tank::decreaseHp()
 void Tank::increaseScore()
 {
 	score++;
+}
+
+void Tank::initTexture(std::string path)
+{
+	texture.loadPNG(path);
+}
+
+void Tank::render()
+{
+	texture.render(x, y, static_cast<double>(dir));
 }

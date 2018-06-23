@@ -1,16 +1,15 @@
 #include "Texture.h"
 
-
-
-Texture::Texture()
+Texture::Texture(int x, int y)
 {
-	texture = NULL;
-	surface = NULL;
+	texture = nullptr;
+	surface = nullptr;
+	this->x = x;
+	this->y = y;
 	width = 0;
 	height = 0;
 	renderRect = { 0,0,0,0 };
 }
-
 
 Texture::~Texture()
 {
@@ -19,18 +18,18 @@ Texture::~Texture()
 
 void Texture::clean()
 {
-	if (texture != NULL)
+	if (texture != nullptr)
 	{
 		SDL_DestroyTexture(texture);
-		texture = NULL;
-		surface = NULL;
+		texture = nullptr;
+		surface = nullptr;
 		width = 0;
 		height = 0;
 		renderRect = { 0,0,0,0 };
 	}
 }
 
-void Texture::loadPNG(SDL_Renderer *renderer, std::string path)
+void Texture::loadPNG(std::string path)
 {
 	clean();
 
@@ -44,10 +43,10 @@ void Texture::loadPNG(SDL_Renderer *renderer, std::string path)
 	renderRect.h = height;
 
 	SDL_FreeSurface(surface);
-	surface = NULL;
+	surface = nullptr;
 }
 
-void Texture::loadText(SDL_Renderer *renderer, std::string text, TTF_Font *font, SDL_Color textColor)
+void Texture::loadText(std::string text, TTF_Font *font, SDL_Color textColor)
 {
 	clean();
 
@@ -60,15 +59,29 @@ void Texture::loadText(SDL_Renderer *renderer, std::string text, TTF_Font *font,
 	renderRect.h = height;
 
 	SDL_FreeSurface(surface);
-	surface = NULL;
+	surface = nullptr;
 }
 
-void Texture::render(SDL_Renderer *renderer, int x, int y, double angle)
+void Texture::setPosition(int x, int y)
+{
+	this->x = x;
+	this->y = y;
+}
+
+void Texture::render(int x, int y, double angle)
 {
 	renderRect.x = x;
 	renderRect.y = y;
 
-	SDL_RenderCopyEx(renderer, texture, NULL, &renderRect, angle, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, texture, nullptr, &renderRect, angle, nullptr, SDL_FLIP_NONE);
+}
+
+void Texture::render()
+{
+	renderRect.x = x;
+	renderRect.y = y;
+
+	SDL_RenderCopyEx(renderer, texture, nullptr, &renderRect, 0, nullptr, SDL_FLIP_NONE);
 }
 
 int Texture::getWidth()
