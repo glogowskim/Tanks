@@ -5,8 +5,8 @@ Texture Wall::solidWallTexture{};
 
 Wall::Wall(int x, int y, bool destructable)
 {
-	width = 64;
-	height = 64;
+	width = WALL_WIDTH;
+	height = WALL_HEIGHT;
 
 	this->x = x;
 	this->y = y;
@@ -33,8 +33,11 @@ void Wall::initTextures(std::string wallTexturePath, std::string solidWallTextur
 
 void Wall::render()
 {
-	if (destructable && exist) wallTexture.render(x, y);
-	else if (exist) solidWallTexture.render(x, y);
+	if (exist)
+	{
+		if (destructable) wallTexture.render(x, y);
+		else solidWallTexture.render(x, y);
+	}
 }
 
 int Wall::getX()

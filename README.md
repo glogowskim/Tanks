@@ -1,6 +1,8 @@
 # Tanks
 
 My first game written in C++ using OOP.
+Now with custom map loaded from file!
+Create your own battlefield!
 
 ![](https://i.imgur.com/mortox0.png)
 

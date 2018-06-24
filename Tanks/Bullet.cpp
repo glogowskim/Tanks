@@ -1,13 +1,5 @@
 #include "Bullet.h"
 
-enum direction
-{
-	UP = 0,
-	RIGHT = 90,
-	DOWN = 180,
-	LEFT = 270
-};
-
 const int Bullet::velocity = 10;
 
 Texture Bullet::texture{};

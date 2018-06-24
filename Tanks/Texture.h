@@ -1,13 +1,15 @@
 #pragma once
 #include "Game.h"
 
-class Texture : public Object
+class Texture
 {
 public:
 	Texture(int x = 0, int y = 0);
 	~Texture();
 
-	virtual void render();
+	static void setRenderer(SDL_Renderer *r);
+
+	void render();
 	void render(int x, int y, double angle = 0.0);
 	void clean();
 	void loadPNG(std::string path);
@@ -18,6 +20,10 @@ public:
 	int getHeight();
 
 private:
+	int x, y;
+	int width, height;
+
+	static SDL_Renderer *renderer;
 	SDL_Texture *texture;
 	SDL_Surface *surface;
 	SDL_Rect renderRect;

@@ -1,13 +1,5 @@
 #include "Tank.h"
 
-enum direction
-{
-	UP = 0,
-	RIGHT = 90,
-	DOWN = 180,
-	LEFT = 270
-};
-
 const int Tank::velocity = 2;
 const int Tank::maxHp = 4;
 
@@ -15,7 +7,9 @@ Texture Tank::texture;
 
 Tank::Tank(int x, int y, direction d, int up, int down, int left, int right)
 {
-	respawn(x, y);
+	respawnX = x;
+	respawnY = y;
+	respawn();
 
 	width = 60;
 	height = 60;
@@ -165,6 +159,13 @@ void Tank::respawn(int x, int y)
 {
 	this->x = x;
 	this->y = y;
+	hp = maxHp;
+}
+
+void Tank::respawn()
+{
+	x = respawnX;
+	y = respawnY;
 	hp = maxHp;
 }
 

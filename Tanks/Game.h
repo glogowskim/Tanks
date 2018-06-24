@@ -12,11 +12,31 @@
 #include "Bullet.h"
 #include "HpBar.h"
 #include "Sound.h"
+#include "MapLoader.h"
+#include "UI.h"
+
+constexpr int MAP_WIDTH = 768;
+constexpr int MAP_HEIGHT = 768;
+constexpr int WALL_WIDTH = 64;
+constexpr int WALL_HEIGHT = 64;
+constexpr int SCREEN_WIDTH = 1024;
+constexpr int SCREEN_HEIGHT = 768;
+
+const std::string VERSION_NUMBER = "v1.1.0";
 
 class HpBar;
 class Wall;
 class Texture;
 class Object;
+class UI;
+
+enum direction
+{
+	UP = 0,
+	RIGHT = 90,
+	DOWN = 180,
+	LEFT = 270
+};
 
 class Game
 {
@@ -30,7 +50,7 @@ private:
 	void loadMap();
 	void loadUI();
 	void render();
-	void freeDynamicAlocatedMemory();
+	void freeDynamicAllocatedMemory();
 	bool checkCollision(SDL_Rect a, SDL_Rect b);
 
 	SDL_Window *window;
@@ -38,26 +58,11 @@ private:
 	SDL_Event e;
 	TTF_Font *bigFont;
 	TTF_Font *normalFont;
-	std::string score1;
-	std::string score2;
 	bool quit;
 
-	std::vector<Object*> object;
-	std::vector<Tank> tank;
-	std::vector<Bullet> bullet;
-	std::vector<Wall> wall;
+	std::vector<Wall*> wall;
+	std::vector<Tank*> tank;
+	std::vector<Bullet*> bullet;
 	Sound *collisionSound;
-	HpBar *bar1;
-	HpBar *bar2;
-
-	Texture *player1;
-	Texture *player2;
-	Texture *player1move;
-	Texture *player1fire;
-	Texture *player2move;
-	Texture *player2fire;
-	Texture *hp1;
-	Texture *hp2;
-	Texture *scoreTank1;
-	Texture *scoreTank2;
+	UI *ui;
 };

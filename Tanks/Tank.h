@@ -11,12 +11,14 @@ public:
 	~Tank();
 
 	static void initTexture(std::string path);
+	static int getMaxHp();
 
 	virtual void render();
 	void handleEvent(SDL_Event &e);
 	void move();
 	void undo();
 	void respawn(int x, int y);
+	void respawn();
 	void setVelocity();
 
 	int getX();
@@ -24,7 +26,6 @@ public:
 	int getWidth();
 	int getHeight();
 	int getHp();
-	int getMaxHp();
 	unsigned int getScore();
 	direction getDirection();
 	SDL_Rect getCollider();
@@ -35,6 +36,9 @@ public:
 	friend class Bullet;
 
 private:
+	int respawnX;
+	int respawnY;
+
 	//Velocity of the tank
 	int vx;
 	int vy;

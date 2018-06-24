@@ -1,5 +1,7 @@
 #include "HpBar.h"
 
+SDL_Renderer* HpBar::renderer{};
+
 HpBar::HpBar(int maxHp, int width, int height, int x, int y)
 {
 	this->maxHp = maxHp;
@@ -16,10 +18,14 @@ HpBar::HpBar(int maxHp, int width, int height, int x, int y)
 	}
 }
 
-
 HpBar::~HpBar()
 {
 	delete[] bar;
+}
+
+void HpBar::setRenderer(SDL_Renderer *r)
+{
+	renderer = r;
 }
 
 void HpBar::setHp(int hp)

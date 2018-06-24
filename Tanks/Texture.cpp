@@ -1,5 +1,7 @@
 #include "Texture.h"
 
+SDL_Renderer* Texture::renderer = nullptr;
+
 Texture::Texture(int x, int y)
 {
 	texture = nullptr;
@@ -82,6 +84,11 @@ void Texture::render()
 	renderRect.y = y;
 
 	SDL_RenderCopyEx(renderer, texture, nullptr, &renderRect, 0, nullptr, SDL_FLIP_NONE);
+}
+
+void Texture::setRenderer(SDL_Renderer *r)
+{
+	renderer = r;
 }
 
 int Texture::getWidth()
