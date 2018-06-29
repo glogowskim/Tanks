@@ -4,7 +4,6 @@ Game::Game()
 {
 	window = nullptr;
 	renderer = nullptr;
-	quit = true;
 	initialize();
 }
 
@@ -12,15 +11,13 @@ Game::~Game()
 {
 	freeDynamicAllocatedMemory();
 
-	TTF_CloseFont(bigFont);
-	bigFont = nullptr;
-	TTF_CloseFont(normalFont);
-	normalFont = nullptr;
+	TTF_CloseFont(font72);
+	TTF_CloseFont(font48);
+	TTF_CloseFont(font24);
+	TTF_CloseFont(font18);
 	
 	SDL_DestroyRenderer(renderer);
-	renderer = nullptr;
 	SDL_DestroyWindow(window);
-	window = nullptr;
 
 	Mix_Quit();
 	TTF_Quit();
@@ -30,6 +27,7 @@ Game::~Game()
 
 void Game::freeDynamicAllocatedMemory()
 {
+	delete state;
 	delete collisionSound;
 	delete ui;
 
@@ -51,41 +49,46 @@ void Game::freeDynamicAllocatedMemory()
 
 void Game::initialize()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) return;
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) State::setCurrentState(EXIT);
 
 	//Set linear filtering
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	window = SDL_CreateWindow(("TANKS " + VERSION_NUMBER).c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (window == nullptr) return;
+	if (window == nullptr) State::setCurrentState(EXIT);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (renderer == nullptr) return;
+	if (renderer == nullptr) State::setCurrentState(EXIT);
 
 	//Initialize PNG loading
 	int imgFlags = IMG_INIT_PNG;
-	if (!(IMG_Init(imgFlags) & imgFlags)) return;
+	if (!(IMG_Init(imgFlags) & imgFlags)) State::setCurrentState(EXIT);
 
 	//Initialize TrueTypeFont
-	if (TTF_Init() == -1) return;
+	if (TTF_Init() == -1) State::setCurrentState(EXIT);
 
-	bigFont = TTF_OpenFont("fonts/TruenoRg.otf", 48);
-	if (bigFont == nullptr) return;
-
-	normalFont = TTF_OpenFont("fonts/TruenoRg.otf", 24);
-	if (normalFont == nullptr) return;
+	font72 = TTF_OpenFont("fonts/TruenoRg.otf", 72);
+	if (font72 == nullptr) State::setCurrentState(EXIT);
+	font48 = TTF_OpenFont("fonts/TruenoRg.otf", 48);
+	if (font48 == nullptr) State::setCurrentState(EXIT);
+	font24 = TTF_OpenFont("fonts/TruenoRg.otf", 24);
+	if (font24 == nullptr) State::setCurrentState(EXIT);
+	font18 = TTF_OpenFont("fonts/TruenoRg.otf", 18);
+	if (font18 == nullptr) State::setCurrentState(EXIT);
 
 	//Initialize audio
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0) return;
-	quit = false;
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0) State::setCurrentState(EXIT);
 
 	collisionSound = new Sound();
 	collisionSound->loadWAV("sounds/collision.wav");
 
 	//Set renderer for classes
+	State::setRenderer(renderer);
 	Object::setRenderer(renderer);
 	Texture::setRenderer(renderer);
 	HpBar::setRenderer(renderer);
+
+	state = new TitleState(font48);
 
 	//Init static textures
 	Bullet::init("images/bullet.png", "sounds/fire.wav", collisionSound);
@@ -108,82 +111,19 @@ void Game::loadMap()
 
 void Game::loadUI()
 {
-	ui = new UI(bigFont, normalFont);
+	ui = new UI(font48, font24);
 }
 
 void Game::run()
 {
 	//Main loop
-	while (!quit)
+	while (State::getCurrentState() != EXIT)
 	{
-		//Checking events
-		while (SDL_PollEvent(&e) != 0)
-		{
-			if (e.type == SDL_QUIT) quit = true;
-			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) quit = true;
-
-			bullet[0]->handleEvent(e);
-			tank[0]->handleEvent(e);
-			bullet[1]->handleEvent(e);
-			tank[1]->handleEvent(e);
-		}
-
-		tank[0]->setVelocity();
-		tank[1]->setVelocity();
-
-		//Loop for every tank
-		for (int i = 0; i < static_cast<int>(tank.size()); i++)
-		{
-			bullet[i]->fire(tank[i], 500);
-			bullet[i]->move();
-			tank[i]->move();
-
-			//Check tank with tank collision
-			if (checkCollision(tank[i]->getCollider(), tank[(i+1)%2]->getCollider())) tank[i]->undo();
-
-			//Check bullet with tank collision
-			if (bullet[i]->doesExist() && checkCollision(bullet[i]->getCollider(), tank[(i+1)%2]->getCollider()))
-			{
-				tank[(i+1)%2]->decreaseHp();
-				bullet[i]->reset();
-				collisionSound->play();
-				if (tank[(i+1)%2]->getHp() == 0)
-				{
-					tank[(i+1)%2]->respawn();
-					tank[i]->increaseScore();
-				}
-			}
-
-			//Check collision with every piece of wall
-			for (int j = 0; j < static_cast<int>(wall.size()); j++)
-			{
-				if (wall[j]->doesExist() && checkCollision(tank[i]->getCollider(), wall[j]->getCollider())) tank[i]->undo();
-				if (wall[j]->doesExist() && bullet[i]->doesExist() && checkCollision(bullet[i]->getCollider(), wall[j]->getCollider()))
-				{
-					if (wall[j]->isDestructable()) wall[j]->destroy();
-					bullet[i]->reset();
-					collisionSound->play();
-				}
-			}
-		}
-
-		//Set current score
-		ui->setScore(tank[0]->getScore(), tank[1]->getScore());
-		ui->setBar(tank[0]->getHp(), tank[1]->getHp());
-
-		render();
+		state->handleEvents(e);
+		state->logic();
+		changeState();
+		state->render();
 	}
-}
-
-void Game::render()
-{
-	//Clear window
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
-
-	Object::renderAll();
-
-	SDL_RenderPresent(renderer);
 }
 
 bool Game::checkCollision(SDL_Rect a, SDL_Rect b)
@@ -194,4 +134,50 @@ bool Game::checkCollision(SDL_Rect a, SDL_Rect b)
 	if (a.x + a.w <= b.x) return false;
 
 	return true;
+}
+
+void Game::changeState()
+{
+	if (State::getNextState() != NONE)
+	{
+		if (State::getNextState() != EXIT)
+			delete state;
+
+		switch (State::getNextState())
+		{
+			case TITLE:
+			{
+				state = new TitleState(font48);
+				break;
+			}
+			case GAME:
+			{
+				state = new GameState(this);
+
+				//This loop is needed to stop moving tank or firing bullet after state change
+				//Without it tank can move or fire without button pressed (after returning from menu state)
+				//It is caused by flags that cannot be changed after state change
+				//That is why it have to be manually set
+				for (int i = 0; i < static_cast<int>(tank.size()); i++)
+				{
+					tank[i]->clearButtonFlags();
+					bullet[i]->clearButtonFlag();
+				}
+				break;
+			}
+			case MENU:
+			{
+				state = new MenuState(font72, font48);
+				break;
+			}
+			case ABOUT:
+			{
+				state = new AboutState(VERSION_NUMBER, font72, font48, font24, font18);
+				break;
+			}
+		}
+
+		State::setCurrentState(State::getNextState());
+		State::setNextState(NONE);
+	}
 }

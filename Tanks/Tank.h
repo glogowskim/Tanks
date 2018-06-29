@@ -14,12 +14,14 @@ public:
 	static int getMaxHp();
 
 	virtual void render();
+	virtual void reset();
 	void handleEvent(SDL_Event &e);
 	void move();
 	void undo();
 	void respawn(int x, int y);
 	void respawn();
 	void setVelocity();
+	void clearButtonFlags();
 
 	int getX();
 	int getY();

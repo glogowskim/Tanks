@@ -180,3 +180,8 @@ void Bullet::render()
 {
 	if(exist) texture.render(x, y, static_cast<double>(dir));
 }
+
+void Bullet::clearButtonFlag()
+{
+	fireButtonPressed = false;
+}

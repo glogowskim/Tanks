@@ -9,7 +9,7 @@ Tank::Tank(int x, int y, direction d, int up, int down, int left, int right)
 {
 	respawnX = x;
 	respawnY = y;
-	respawn();
+	reset();
 
 	width = 60;
 	height = 60;
@@ -22,18 +22,13 @@ Tank::Tank(int x, int y, direction d, int up, int down, int left, int right)
 
 	dir = d;
 
-	score = 0;
-
 	//Set steering keys
 	this->up = up;
 	this->down = down;
 	this->left = left;
 	this->right = right;
 
-	upButtonPressed = false;
-	downButtonPressed = false;
-	leftButtonPressed = false;
-	rightButtonPressed = false;
+	clearButtonFlags();
 
 	upTicks = 0;
 	downTicks = 0;
@@ -169,6 +164,12 @@ void Tank::respawn()
 	hp = maxHp;
 }
 
+void Tank::reset()
+{
+	respawn();
+	score = 0;
+}
+
 int Tank::getX()
 {
 	return x;
@@ -232,4 +233,12 @@ void Tank::initTexture(std::string path)
 void Tank::render()
 {
 	texture.render(x, y, static_cast<double>(dir));
+}
+
+void Tank::clearButtonFlags()
+{
+	upButtonPressed = false;
+	downButtonPressed = false;
+	leftButtonPressed = false;
+	rightButtonPressed = false;
 }

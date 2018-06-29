@@ -6,11 +6,13 @@ class Object
 {
 public:
 	Object();
-	~Object();
+	virtual ~Object();
 
 	static void setRenderer(SDL_Renderer *r);
 	static void renderAll();
+	static void resetAll();
 	virtual void render() = 0;
+	virtual void reset() = 0;
 
 protected:
 	int x, y, width, height;

@@ -3,14 +3,14 @@
 Texture Wall::wallTexture{};
 Texture Wall::solidWallTexture{};
 
-Wall::Wall(int x, int y, bool destructable)
+Wall::Wall(int x, int y, bool destructible)
 {
 	width = WALL_WIDTH;
 	height = WALL_HEIGHT;
 
 	this->x = x;
 	this->y = y;
-	this->destructable = destructable;
+	this->destructible = destructible;
 	exist = true;
 
 	//Set collider box
@@ -35,7 +35,7 @@ void Wall::render()
 {
 	if (exist)
 	{
-		if (destructable) wallTexture.render(x, y);
+		if (destructible) wallTexture.render(x, y);
 		else solidWallTexture.render(x, y);
 	}
 }
@@ -60,12 +60,17 @@ void Wall::destroy()
 	exist = false;
 }
 
+void Wall::reset()
+{
+	exist = true;
+}
+
 SDL_Rect Wall::getCollider()
 {
 	return collider;
 }
 
-bool Wall::isDestructable()
+bool Wall::isDestructible()
 {
-	return destructable;
+	return destructible;
 }

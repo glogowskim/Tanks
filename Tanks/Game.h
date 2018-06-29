@@ -14,6 +14,11 @@
 #include "Sound.h"
 #include "MapLoader.h"
 #include "UI.h"
+#include "State.h"
+#include "TitleState.h"
+#include "GameState.h"
+#include "MenuState.h"
+#include "AboutState.h"
 
 constexpr int MAP_WIDTH = 768;
 constexpr int MAP_HEIGHT = 768;
@@ -22,7 +27,7 @@ constexpr int WALL_HEIGHT = 64;
 constexpr int SCREEN_WIDTH = 1024;
 constexpr int SCREEN_HEIGHT = 768;
 
-const std::string VERSION_NUMBER = "v1.1.0";
+const std::string VERSION_NUMBER = "v1.2.0";
 
 class HpBar;
 class Wall;
@@ -45,20 +50,25 @@ public:
 	~Game();
 	void run();
 
+	friend class GameState;
+	friend class MenuState;
+
 private:
 	void initialize();
 	void loadMap();
 	void loadUI();
-	void render();
 	void freeDynamicAllocatedMemory();
 	bool checkCollision(SDL_Rect a, SDL_Rect b);
+	void changeState();
 
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	SDL_Event e;
-	TTF_Font *bigFont;
-	TTF_Font *normalFont;
-	bool quit;
+	TTF_Font *font72;
+	TTF_Font *font48;
+	TTF_Font *font24;
+	TTF_Font *font18;
+	State *state;
 
 	std::vector<Wall*> wall;
 	std::vector<Tank*> tank;

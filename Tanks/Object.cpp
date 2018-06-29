@@ -25,3 +25,11 @@ void Object::renderAll()
 		x->render();
 	}
 }
+
+void Object::resetAll()
+{
+	for (auto x : object)
+	{
+		x->reset();
+	}
+}

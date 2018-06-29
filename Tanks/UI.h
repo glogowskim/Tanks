@@ -1,7 +1,7 @@
 #pragma once
 #include "Game.h"
 
-enum class textureUI
+enum class TextureUI
 {
 	PLAYER1,
 	PLAYER2,
@@ -24,6 +24,7 @@ public:
 	~UI();
 
 	virtual void render();
+	virtual void reset();
 	void setBar(int player1, int player2);
 	void setScore(int player1, int player2);
 

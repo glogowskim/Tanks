@@ -25,16 +25,15 @@ UI::UI(TTF_Font *bigFont, TTF_Font *normalFont)
 	texture.push_back(new Texture(786, 200));
 	texture.push_back(new Texture(786, 587));
 
-	texture[static_cast<int>(textureUI::PLAYER1)]->loadText("PLAYER 1", bigFont);
-	texture[static_cast<int>(textureUI::PLAYER2)]->loadText("PLAYER 2", bigFont);
-	texture[static_cast<int>(textureUI::PLAYER1MOVE)]->loadText("Move: arrows", normalFont);
-	texture[static_cast<int>(textureUI::PLAYER2MOVE)]->loadText("Move: W S A D", normalFont);
-	texture[static_cast<int>(textureUI::PLAYER1FIRE)]->loadText("Fire: RETURN", normalFont);
-	texture[static_cast<int>(textureUI::PLAYER2FIRE)]->loadText("Fire: SPACE", normalFont);
-	texture[static_cast<int>(textureUI::HP1)]->loadText("HP:", normalFont);
-	texture[static_cast<int>(textureUI::HP2)]->loadText("HP:", normalFont);
-	texture[static_cast<int>(textureUI::SCORETANK1)]->loadText("SCORE: 0", normalFont);
-	texture[static_cast<int>(textureUI::SCORETANK2)]->loadText("SCORE: 0", normalFont);
+	texture[static_cast<int>(TextureUI::PLAYER1)]->loadText("PLAYER 1", bigFont);
+	texture[static_cast<int>(TextureUI::PLAYER2)]->loadText("PLAYER 2", bigFont);
+	texture[static_cast<int>(TextureUI::PLAYER1MOVE)]->loadText("Move: arrows", normalFont);
+	texture[static_cast<int>(TextureUI::PLAYER2MOVE)]->loadText("Move: W S A D", normalFont);
+	texture[static_cast<int>(TextureUI::PLAYER1FIRE)]->loadText("Fire: RETURN", normalFont);
+	texture[static_cast<int>(TextureUI::PLAYER2FIRE)]->loadText("Fire: SPACE", normalFont);
+	texture[static_cast<int>(TextureUI::HP1)]->loadText("HP:", normalFont);
+	texture[static_cast<int>(TextureUI::HP2)]->loadText("HP:", normalFont);
+	reset();
 
 	bar1 = new HpBar(Tank::getMaxHp(), 150, 30, 836, 157);
 	bar2 = new HpBar(Tank::getMaxHp(), 150, 30, 836, 544);
@@ -71,6 +70,12 @@ void UI::render()
 	bar2->render();
 }
 
+void UI::reset()
+{
+	texture[static_cast<int>(TextureUI::SCORETANK1)]->loadText("SCORE: 0", normalFont);
+	texture[static_cast<int>(TextureUI::SCORETANK2)]->loadText("SCORE: 0", normalFont);
+}
+
 void UI::setBar(int player1, int player2)
 {
 	bar1->setHp(player1);
@@ -81,6 +86,6 @@ void UI::setScore(int player1, int player2)
 {
 	score1 = "SCORE: " + std::to_string(player1);
 	score2 = "SCORE: " + std::to_string(player2);
-	texture[static_cast<int>(textureUI::SCORETANK1)]->loadText(score1.c_str(), normalFont);
-	texture[static_cast<int>(textureUI::SCORETANK2)]->loadText(score2.c_str(), normalFont);
+	texture[static_cast<int>(TextureUI::SCORETANK1)]->loadText(score1.c_str(), normalFont);
+	texture[static_cast<int>(TextureUI::SCORETANK2)]->loadText(score2.c_str(), normalFont);
 }

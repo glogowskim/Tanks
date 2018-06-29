@@ -16,10 +16,11 @@ public:
 
 	//Render bullet if exist
 	virtual void render();
+	virtual void reset();
 	void handleEvent(SDL_Event &e);
-	void reset();
 	void fire(Tank *tank, int delay);
 	void move();
+	void clearButtonFlag();
 
 	bool doesExist();
 	direction getDirection();

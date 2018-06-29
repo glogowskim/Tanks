@@ -86,7 +86,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -128,29 +128,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AboutState.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="HpBar.h" />
     <ClInclude Include="MapLoader.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Tank.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TitleState.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AboutState.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="HpBar.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapLoader.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TitleState.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Wall.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="map.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
